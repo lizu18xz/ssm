@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fayayo.dao.RoleDao">
+
+    <!-- keyColumn指向主键,useGeneratedKeys表示启用数据库的生成策略，然后将主键回填POJO-->
+    <insert id="insertRole" parameterType="role"  keyColumn="id" useGeneratedKeys="true">
+        insert into t_role(role_name, note) values(#{roleName}, #{note})
+    </insert>
+
+    <!--"role"是一个别名，通过后续的配置会使得它指向我们开发的POJO-->
+    <update id="updateRole" parameterType="role">
+        update t_role
+        <set>
+            <if test="roleName != null and roleName !=''">role_name = #{roleName},</if>
+            <if test="note != null and note !=''">note = #{note}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRole" parameterType="long">
+        delete from t_role where id=#{id}
+    </delete>
+
+    <select id="getRole" parameterType="long" resultType="role">
+        select id, role_name as roleName, note from t_role where id = #{id}
+    </select>
+
+    <select id="findRoles" resultType="role">
+        select id, role_name as roleName, note from t_role
+
+        limit #{start}, #{limit}
+    </select>
+
+    <select id="countRoles" resultType="int">
+        select count(*) as total from t_role
+        <where>
+            <if test="roleName != null">
+                role_name like concat('%', #{roleName}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

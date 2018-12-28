@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <typeHandlers>
+        <package name="com.fayayo.typehandler.SexTypeHandler"/>
+    </typeHandlers>
+    
+    <plugins>
+        <plugin interceptor="com.fayayo.plugin.TimePlugin">
+
+            <!-- 测试使用1毫秒，实际应该100ms或者更高 -->
+            <property name="up.time" value="1"/>
+            
+        </plugin>
+    </plugins>
+
+</configuration>
