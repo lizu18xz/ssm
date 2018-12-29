@@ -3,10 +3,13 @@ package com.fayayo.service.impl;
 import com.fayayo.dao.UserDao;
 import com.fayayo.pojo.SexEnum;
 import com.fayayo.pojo.User;
+import com.fayayo.service.UserRoleService;
 import com.fayayo.service.UserService;
 import com.fayayo.vo.PageData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @Override
     public User getUser(Long id) {
@@ -52,7 +58,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public User deleteUser(Long id) {
-        return null;
+        User user = userDao.getUser(id);
+        int result = userDao.deleteUser(id);
+        // 调用用户角色删除，子方法调用从而产生传播行为
+        userRoleService.deleteUserRoleByUserId(id);
+        return result > 0 ? user : null;
     }
 }

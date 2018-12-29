@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fayayo.dao.UserRoleDao">
+
+    <!--通过外连接来寻找选中的和未选中的记录。如果userId为空则说明没有选中-->
+    <select id="findUserRolesByUserId" resultType="user_role">
+        select r.id as roleId, r.role_name as roleName, u.id as userId, u.user_name as userName
+        from t_role r left join t_user_role ur on r.id = ur.role_id and ur.user_id = #{userId}
+        left join t_user u on ur.user_id = u.id
+    </select>
+
+    <insert id="insertUserRole" parameterType="user_role">
+        insert into t_user_role(user_id, role_id) values(#{userId}, #{roleId})
+    </insert>
+
+    <delete id="deleteUserRoleByUserId" parameterType="long">
+        delete from t_user_role where user_id = #{userId}
+    </delete>
+</mapper>

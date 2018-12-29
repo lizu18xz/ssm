@@ -6,6 +6,8 @@ import com.fayayo.service.RoleService;
 import com.fayayo.vo.PageData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,6 +46,10 @@ public class RoleServiceImpl implements RoleService {
         return pageData;
     }
 
+    // 使用读写提交隔离级别，适用于高并发场景
+    @Transactional(isolation = Isolation.DEFAULT)
+    // 使用读序列化隔离级别，适用于非高并发且需要保证数据一致性的场景
+    // @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public int insertRole(Role role) {
 
